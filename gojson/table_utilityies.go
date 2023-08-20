@@ -83,22 +83,6 @@ func CheckArgs(names []string, values []interface{}, t *Table) {
 
 }
 
-func SaveToTheTable(names []string, values []interface{}, t *Table) {
-	// Json datayı aldık.
-	jsonData := createTheJson(names, values)
-	fmt.Println(jsonData)
-
-	// database'pathini çekip table ismi ile birleştirdik pathi elde ettik.
-	filePath := t.PathDatabase + t.TableName + ".json"
-
-	// yazma işlemi gerçekleşiyor.
-	err := os.WriteFile(filePath, []byte(jsonData), 0644)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(5)
-	}
-}
-
 func countWord(names []string, name string) int {
 	var count int
 
