@@ -1,7 +1,9 @@
 package gojson
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"reflect"
 	"strings"
@@ -94,6 +96,58 @@ func countWord(names []string, name string) int {
 	}
 
 	return count
+}
+
+func WriteToJson(data map[string]interface{}, t *Table) {
+	// Chat GPT
+
+	filePath := t.PathDatabase + t.TableName + ".json"
+
+	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
+	if err != nil {
+		fmt.Println("Error opening JSON file:", err)
+		return
+	}
+	defer file.Close()
+
+	// Mevcut veriyi oku
+	byteValue, _ := io.ReadAll(file)
+	var existingData []map[string]interface{}
+	err = json.Unmarshal(byteValue, &existingData)
+	if err != nil {
+		fmt.Println("Error decoding JSON:", err)
+		return
+	}
+
+	// Jsonu okduğumuz yerden aldığımız dataya eklieyeceğim datayı ekliyoruz
+	existingData = append(existingData, data)
+
+	// JSON dosyasını yeniden yaz
+	newJSONData, err := json.Marshal(existingData)
+	if err != nil {
+		fmt.Println("Error encoding JSON:", err)
+		return
+	}
+
+	err = os.WriteFile(filePath, newJSONData, 0644)
+	if err != nil {
+		fmt.Println("Error writing JSON file:", err)
+		return
+	}
+}
+
+func GetMapForJson(names []string, values []interface{}) map[string]interface{} {
+	data := make(map[string]interface{})
+
+	for i, v := range names {
+		for i2, v2 := range values {
+			if i == i2 {
+				data[v] = v2
+			}
+		}
+	}
+
+	return data
 }
 
 func createTheJson(names []string, values []interface{}) string {

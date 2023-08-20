@@ -36,6 +36,11 @@ func (d *Database) CreateFiles() {
 				fmt.Println(err)
 			}
 			defer file.Close()
+
+			err = os.WriteFile(TablePath, []byte("[]"), 0644)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	} else {
 		// Eğer Db klasörü var ise içindeki tablelar tam olarak var mı bakıyoruz.
@@ -49,9 +54,15 @@ func (d *Database) CreateFiles() {
 					fmt.Println(err)
 				}
 				defer file.Close()
+
+				err = os.WriteFile(TablePath, []byte("[]"), 0644)
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 	}
+
 }
 
 // Buraya bir tane gettable func yaz table döndürsün. Belki ilerde table için query yazma felan yaparım.
