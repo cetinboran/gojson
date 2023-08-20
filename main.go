@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Database1
-	Database1 := gojson.CreateDatabase("Database1", "../")
+	Database1 := gojson.CreateDatabase("Database1", "./")
 
 	// Table1
 	Table1 := gojson.CreateTable("users")
@@ -25,7 +25,7 @@ func main() {
 	Database1.AddTable(Table1)
 	Database1.AddTable(Table2)
 
-	Database1.Start()
+	Database1.CreateFiles()
 
 	fmt.Println(Database1)
 	// fmt.Println(Table1)
