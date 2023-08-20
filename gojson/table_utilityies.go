@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-	"strings"
 
 	"github.com/cetinboran/gojson/errorhandler"
 )
@@ -15,7 +14,7 @@ func CheckNames(names []string, t *Table) bool {
 
 	for _, v := range names {
 		// Buradaki count karakterleri saydığı için a yazınca propertiy olarak sıkıntı çıkıyor.
-		if strings.Count(strings.Join(names, " "), v) != 1 {
+		if countWord(names, v) != 1 {
 			fmt.Println(errorhandler.GetErrorTable(2, v))
 			os.Exit(2)
 		}
@@ -61,4 +60,17 @@ func CheckValues(values []interface{}, t *Table) bool {
 		}
 	}
 	return true
+}
+
+func countWord(names []string, name string) int {
+	var count int
+
+	// Kelimeyi sayıyoruz
+	for _, v := range names {
+		if v == name {
+			count++
+		}
+	}
+
+	return count
 }
