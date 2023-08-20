@@ -1,5 +1,10 @@
 package gojson
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Initialize Table
 func CreateTable(tableName string) Table {
 	return Table{TableName: tableName}
@@ -8,4 +13,16 @@ func CreateTable(tableName string) Table {
 // Adds Property to the table
 func (t *Table) AddProperty(name string, valueType string) {
 	t.Properties = append(t.Properties, Property{Name: name, Type: valueType})
+}
+
+// Addes data to the table
+func (t *Table) Save(name string, value []interface{}) {
+	name = strings.ReplaceAll(name, " ", "") // Bütün boşluklardan kurtuluyorum
+	nameArr := strings.Split(name, ",")      // , ile split atıyorum.
+
+	fmt.Println(nameArr)
+	if CheckValues(value, t) {
+		fmt.Println("Anan")
+	}
+
 }

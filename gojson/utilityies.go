@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// For Database.go
 func HasFile(filePath string) bool {
 	_, err := os.Stat(filePath)
 	if err == nil {

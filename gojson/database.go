@@ -53,3 +53,5 @@ func (d *Database) CreateFiles() {
 	}
 
 }
+
+// Buraya bir tane gettable func yaz table döndürsün. Belki ilerde table için query yazma felan yaparım.
