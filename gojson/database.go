@@ -10,3 +10,7 @@ func (d *Database) AddTable(table Table) {
 	// Eğer table'ı sonra değiştiriceksen * kullanmalısın ama şuanlık sıkıntı yok
 	d.Tables = append(d.Tables, table)
 }
+
+func (d *Database) Start() {
+
+}

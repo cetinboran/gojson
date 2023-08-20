@@ -25,6 +25,8 @@ func main() {
 	Database1.AddTable(Table1)
 	Database1.AddTable(Table2)
 
+	Database1.Start()
+
 	fmt.Println(Database1)
-	fmt.Println(Table1)
+	// fmt.Println(Table1)
 }
