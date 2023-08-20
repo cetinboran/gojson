@@ -6,6 +6,6 @@ func CreateTable(tableName string) Table {
 }
 
 // Adds Property to the table
-func (t *Table) AddProperty(name string, value string) {
-	t.Properties = append(t.Properties, Property{Name: name, Value: value})
+func (t *Table) AddProperty(name string, valueType string) {
+	t.Properties = append(t.Properties, Property{Name: name, Type: valueType})
 }

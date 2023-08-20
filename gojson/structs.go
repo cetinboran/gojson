@@ -16,5 +16,5 @@ type Table struct {
 // Json Properties Struct
 type Property struct {
 	Name  string
-	Value string
+	Type string
 }

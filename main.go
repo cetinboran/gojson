@@ -12,14 +12,14 @@ func main() {
 
 	// Table1
 	Table1 := gojson.CreateTable("users")
-	Table1.AddProperty("userId", "1")
-	Table1.AddProperty("username", "Boran")
-	Table1.AddProperty("password", "123")
+	Table1.AddProperty("userId", "int")
+	Table1.AddProperty("username", "string")
+	Table1.AddProperty("password", "string")
 
 	// Table1
 	Table2 := gojson.CreateTable("config")
-	Table2.AddProperty("secretKey", "1645854515")
-	Table2.AddProperty("Timeout", "4")
+	Table2.AddProperty("secretKey", "string")
+	Table2.AddProperty("Timeout", "int")
 
 	// Adds the table to the database
 	Database1.AddTable(Table1)
