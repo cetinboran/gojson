@@ -4,13 +4,14 @@ package gojson
 type Database struct {
 	DatabaseName string
 	Path         string
-	Tables       []Table
+	Tables       []*Table
 }
 
 // Table Struct
 type Table struct {
-	TableName  string
-	Properties []Property
+	TableName    string
+	Properties   []Property
+	PathDatabase string
 }
 
 // Json Properties Struct

@@ -11,8 +11,9 @@ func CreateDatabase(dbName string, path string) Database {
 }
 
 // Adds table to the database
-func (d *Database) AddTable(table Table) {
+func (d *Database) AddTable(table *Table) {
 	// Eğer table'ı sonra değiştiriceksen * kullanmalısın ama şuanlık sıkıntı yok
+	table.PathDatabase = d.Path + d.DatabaseName + "/"
 	d.Tables = append(d.Tables, table)
 }
 
@@ -51,7 +52,6 @@ func (d *Database) CreateFiles() {
 			}
 		}
 	}
-
 }
 
 // Buraya bir tane gettable func yaz table döndürsün. Belki ilerde table için query yazma felan yaparım.
