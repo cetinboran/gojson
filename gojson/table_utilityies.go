@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"reflect"
-	"strings"
 
 	"github.com/cetinboran/gojson/errorhandler"
 )
@@ -105,6 +104,13 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 		return
 	}
 
+	// Eğer value olarak -1 koyduysa onu Primary Key olarak algılıyoruz ve değerini otomatik atıyoruz.
+	for k, v := range data {
+		if v == -1 {
+			data[k] = len(existingData) + 1
+		}
+	}
+
 	// Jsonu okduğumuz yerden aldığımız dataya eklieyeceğim datayı ekliyoruz
 	existingData = append(existingData, data)
 
@@ -134,42 +140,6 @@ func GetMapForJson(names []string, values []interface{}) map[string]interface{} 
 	}
 
 	return data
-}
-
-func createTheJson(names []string, values []interface{}) string {
-	// İnternetten dız
-
-	var jsonData strings.Builder
-	jsonData.WriteString("{")
-	for i, key := range names {
-		if i != 0 {
-			jsonData.WriteString(",")
-		}
-
-		jsonData.WriteString(`"`)
-		jsonData.WriteString(key)
-		jsonData.WriteString(`":`)
-
-		// Type'a göre yazılış değişiyor.
-		value := values[i]
-		switch v := value.(type) {
-		case int:
-			jsonData.WriteString(fmt.Sprintf("%d", v))
-		case string:
-			jsonData.WriteString(`"`)
-			jsonData.WriteString(v)
-			jsonData.WriteString(`"`)
-		case bool:
-			if v {
-				jsonData.WriteString(fmt.Sprintf("%d", 1))
-			} else {
-				jsonData.WriteString(fmt.Sprintf("%d", 0))
-			}
-		}
-	}
-	jsonData.WriteString("}")
-
-	return jsonData.String()
 }
 
 func countWord(names []string, name string) int {
