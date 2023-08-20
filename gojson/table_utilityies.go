@@ -3,6 +3,7 @@ package gojson
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/cetinboran/gojson/errorhandler"
@@ -13,6 +14,7 @@ func CheckNames(names []string, t *Table) bool {
 	check := false
 
 	for _, v := range names {
+		// Buradaki count karakterleri saydığı için a yazınca propertiy olarak sıkıntı çıkıyor.
 		if strings.Count(strings.Join(names, " "), v) != 1 {
 			fmt.Println(errorhandler.GetErrorTable(2, v))
 			os.Exit(2)
@@ -37,6 +39,26 @@ func CheckNames(names []string, t *Table) bool {
 }
 
 func CheckValues(values []interface{}, t *Table) bool {
+	check := false
 
+	for i, v := range values {
+		typeStr := fmt.Sprint(reflect.TypeOf(v))
+		for j, p := range t.Properties {
+			// Burada 0. index value ile 0. index table type ı kayaslanıyor. Yani i = j olmalı diğerlerine bakmanın anlamı yok.
+			if i == j {
+				if p.Type == typeStr {
+					check = true
+					break
+				} else {
+					check = false
+				}
+			}
+		}
+		if !check {
+			// gelentype->olmasıgerekentype şeklinde bir hata mesajı veriyoruz.
+			fmt.Println(errorhandler.GetErrorTable(3, typeStr+"->"+t.Properties[i].Type+" in the "+fmt.Sprint(i+1)+" th row."))
+			os.Exit(3)
+		}
+	}
 	return true
 }

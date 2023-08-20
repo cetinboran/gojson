@@ -20,9 +20,13 @@ func (t *Table) Save(name string, value []interface{}) {
 	name = strings.ReplaceAll(name, " ", "") // Bütün boşluklardan kurtuluyorum
 	nameArr := strings.Split(name, ",")      // , ile split atıyorum.
 
-	fmt.Println(nameArr)
 	if CheckValues(value, t) {
 		fmt.Println("Anan")
 	}
+
+	fmt.Println(nameArr)
+	// if CheckNames(nameArr, t) {
+	// 	fmt.Println("Bababan")
+	// }
 
 }
