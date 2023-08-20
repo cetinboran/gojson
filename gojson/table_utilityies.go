@@ -9,7 +9,7 @@ import (
 )
 
 // Here we compare property names with incoming names if they are not the same we send an error. At the same time, we send an error if the same property name is written more than once.
-func CheckNames(names []string, t *Table) bool {
+func CheckNames(names []string, t *Table) {
 	check := false
 
 	for _, v := range names {
@@ -34,10 +34,9 @@ func CheckNames(names []string, t *Table) bool {
 	}
 
 	// Buraya kadar geldiyse exit e gelmemiştir o zaman sorun yok.
-	return true
 }
 
-func CheckValues(values []interface{}, t *Table) bool {
+func CheckValues(values []interface{}, t *Table) {
 	check := false
 
 	for i, v := range values {
@@ -59,7 +58,19 @@ func CheckValues(values []interface{}, t *Table) bool {
 			os.Exit(3)
 		}
 	}
-	return true
+}
+
+func CheckArgs(names []string, values []interface{}, t *Table) {
+	if len(names) != len(values) {
+		v := fmt.Sprintf("%v != %v", len(names), len(values))
+		fmt.Println(errorhandler.GetErrorTable(4, v))
+		os.Exit(4)
+	}
+
+	CheckNames(names, t)
+	CheckValues(values, t)
+	// Eğer buraya geçerse yukarıdaki fonksiyonlar os.exit çalıştırmamıştır.
+
 }
 
 func countWord(names []string, name string) int {

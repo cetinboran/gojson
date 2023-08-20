@@ -1,7 +1,6 @@
 package gojson
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -16,17 +15,11 @@ func (t *Table) AddProperty(name string, valueType string) {
 }
 
 // Addes data to the table
-func (t *Table) Save(name string, value []interface{}) {
+func (t *Table) Save(name string, values []interface{}) {
 	name = strings.ReplaceAll(name, " ", "") // Bütün boşluklardan kurtuluyorum
 	nameArr := strings.Split(name, ",")      // , ile split atıyorum.
 
-	if CheckValues(value, t) {
-		fmt.Println("Anan")
-	}
-
-	fmt.Println(nameArr)
-	// if CheckNames(nameArr, t) {
-	// 	fmt.Println("Bababan")
-	// }
+	// Burası hata çıkarırsa programdan exit atıyor. yoksa devam ediyor.
+	CheckArgs(nameArr, values, t)
 
 }

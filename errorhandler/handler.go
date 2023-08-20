@@ -10,6 +10,8 @@ func GetErrorTable(errorId int, value string) string {
 		return fmt.Sprintf("This property cannot be written more than once: %v", value)
 	case 3:
 		return fmt.Sprintf("This property type is not matching: %v", value)
+	case 4:
+		return fmt.Sprintf("Save() inputs has to be same length: %v", value)
 	}
 
 	return ""
