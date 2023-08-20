@@ -1,6 +1,7 @@
 package gojson
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"reflect"
@@ -61,8 +62,17 @@ func CheckValues(values []interface{}, t *Table) {
 }
 
 func CheckArgs(names []string, values []interface{}, t *Table) {
-	if len(names) != len(values) {
-		v := fmt.Sprintf("%v != %v", len(names), len(values))
+	// Artık kaç tane properties var ise o kadar input girmesi lazım values ve names olarak
+	// Eksik ise hata atıyoruz.
+	
+	if len(names) != len(t.Properties) {
+		v := fmt.Sprintf("%v != %v", len(names), len(t.Properties))
+		fmt.Println(errorhandler.GetErrorTable(4, v))
+		os.Exit(4)
+	}
+
+	if len(values) != len(t.Properties) {
+		v := fmt.Sprintf("%v != %v", len(values), len(t.Properties))
 		fmt.Println(errorhandler.GetErrorTable(4, v))
 		os.Exit(4)
 	}
@@ -71,6 +81,26 @@ func CheckArgs(names []string, values []interface{}, t *Table) {
 	CheckValues(values, t)
 	// Eğer buraya geçerse yukarıdaki fonksiyonlar os.exit çalıştırmamıştır.
 
+}
+
+func SaveToTheTable(names []string, values []interface{}, t *Table) {
+	all := make(map[string]interface{})
+
+	for i, v := range names {
+		for i2, v2 := range values {
+			if i == i2 {
+				all[v] = v2
+			}
+		}
+	}
+
+	jsonData, err := json.MarshalIndent(all, "", "  ")
+	if err != nil {
+		fmt.Println("JSON verisi oluşturulurken bir hata oluştu:", err)
+		return
+	}
+
+	fmt.Println(string(jsonData))
 }
 
 func countWord(names []string, name string) int {

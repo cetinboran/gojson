@@ -22,4 +22,5 @@ func (t *Table) Save(name string, values []interface{}) {
 	// Burası hata çıkarırsa programdan exit atıyor. yoksa devam ediyor.
 	CheckArgs(nameArr, values, t)
 
+	SaveToTheTable(nameArr, values, t)
 }
