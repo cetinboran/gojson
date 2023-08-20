@@ -1,10 +1,10 @@
 package gojson
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"reflect"
+	"strings"
 
 	"github.com/cetinboran/gojson/errorhandler"
 )
@@ -64,7 +64,7 @@ func CheckValues(values []interface{}, t *Table) {
 func CheckArgs(names []string, values []interface{}, t *Table) {
 	// Artık kaç tane properties var ise o kadar input girmesi lazım values ve names olarak
 	// Eksik ise hata atıyoruz.
-	
+
 	if len(names) != len(t.Properties) {
 		v := fmt.Sprintf("%v != %v", len(names), len(t.Properties))
 		fmt.Println(errorhandler.GetErrorTable(4, v))
@@ -83,24 +83,10 @@ func CheckArgs(names []string, values []interface{}, t *Table) {
 
 }
 
-func SaveToTheTable(names []string, values []interface{}, t *Table) {
-	all := make(map[string]interface{})
+func SaveToTheTable(names []string, values []interface{}) {
+	theJson := createTheJson(names, values)
 
-	for i, v := range names {
-		for i2, v2 := range values {
-			if i == i2 {
-				all[v] = v2
-			}
-		}
-	}
-
-	jsonData, err := json.MarshalIndent(all, "", "  ")
-	if err != nil {
-		fmt.Println("JSON verisi oluşturulurken bir hata oluştu:", err)
-		return
-	}
-
-	fmt.Println(string(jsonData))
+	fmt.Print(theJson)
 }
 
 func countWord(names []string, name string) int {
@@ -114,4 +100,40 @@ func countWord(names []string, name string) int {
 	}
 
 	return count
+}
+
+func createTheJson(names []string, values []interface{}) string {
+	// İnternetten dız
+
+	var jsonData strings.Builder
+	jsonData.WriteString("{")
+	for i, key := range names {
+		if i != 0 {
+			jsonData.WriteString(",")
+		}
+
+		jsonData.WriteString(`"`)
+		jsonData.WriteString(key)
+		jsonData.WriteString(`":`)
+
+		// Type'a göre yazılış değişiyor.
+		value := values[i]
+		switch v := value.(type) {
+		case int:
+			jsonData.WriteString(fmt.Sprintf("%d", v))
+		case string:
+			jsonData.WriteString(`"`)
+			jsonData.WriteString(v)
+			jsonData.WriteString(`"`)
+		case bool:
+			if v {
+				jsonData.WriteString(fmt.Sprintf("%d", 1))
+			} else {
+				jsonData.WriteString(fmt.Sprintf("%d", 0))
+			}
+		}
+	}
+	jsonData.WriteString("}")
+
+	return jsonData.String()
 }
