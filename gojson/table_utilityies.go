@@ -104,13 +104,6 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 		return
 	}
 
-	// Eğer value olarak -1 koyduysa onu Primary Key olarak algılıyoruz ve değerini otomatik atıyoruz.
-	for k, v := range data {
-		if v == -1 {
-			data[k] = len(existingData) + 1
-		}
-	}
-
 	// Jsonu okduğumuz yerden aldığımız dataya eklieyeceğim datayı ekliyoruz
 	existingData = append(existingData, data)
 
@@ -128,13 +121,31 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 	}
 }
 
-func GetMapForJson(names []string, values []interface{}) map[string]interface{} {
+// Finds Primary Key
+func FindPrimaryKey(t *Table) string {
+	var name string
+	for _, p := range t.Properties {
+		if p.Mode == "PK" {
+			name = p.Name
+			break
+		}
+	}
+
+	return name
+}
+
+func GetMapForJson(names []string, values []interface{}, t *Table) map[string]interface{} {
 	data := make(map[string]interface{})
 
 	for i, v := range names {
 		for i2, v2 := range values {
 			if i == i2 {
 				data[v] = v2
+
+				// Eğer v primary'key ise value'yu jsona göre ayarla.
+				if v == FindPrimaryKey(t) {
+					data[v] = len(t.Get()) + 1
+				}
 			}
 		}
 	}

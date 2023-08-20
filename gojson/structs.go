@@ -18,4 +18,5 @@ type Table struct {
 type Property struct {
 	Name string
 	Type string
+	Mode string
 }

@@ -14,8 +14,8 @@ func CreateTable(tableName string) Table {
 }
 
 // Adds Property to the table
-func (t *Table) AddProperty(name string, valueType string) {
-	t.Properties = append(t.Properties, Property{Name: name, Type: valueType})
+func (t *Table) AddProperty(name string, valueType string, mode string) {
+	t.Properties = append(t.Properties, Property{Name: name, Type: valueType, Mode: mode})
 }
 
 // Addes data to the table
@@ -26,7 +26,8 @@ func (t *Table) Save(name string, values []interface{}) {
 	// Burası hata çıkarırsa programdan exit atıyor. yoksa devam ediyor.
 	CheckArgs(nameArr, values, t)
 
-	WriteToJson(GetMapForJson(nameArr, values), t)
+	newData := GetMapForJson(nameArr, values, t)
+	WriteToJson(newData, t)
 }
 
 func (t *Table) Get() []map[string]interface{} {
