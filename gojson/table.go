@@ -1,6 +1,10 @@
 package gojson
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 	"strings"
 )
 
@@ -23,4 +27,24 @@ func (t *Table) Save(name string, values []interface{}) {
 	CheckArgs(nameArr, values, t)
 
 	WriteToJson(GetMapForJson(nameArr, values), t)
+}
+
+func (t *Table) Get() []map[string]interface{} {
+	filePath := t.PathDatabase + t.TableName + ".json"
+
+	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
+
+	byteValue, _ := io.ReadAll(file)
+	var existingData []map[string]interface{}
+	err = json.Unmarshal(byteValue, &existingData)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return existingData
 }

@@ -85,22 +85,8 @@ func CheckArgs(names []string, values []interface{}, t *Table) {
 
 }
 
-func countWord(names []string, name string) int {
-	var count int
-
-	// Kelimeyi sayıyoruz
-	for _, v := range names {
-		if v == name {
-			count++
-		}
-	}
-
-	return count
-}
-
+// Writes to json file.
 func WriteToJson(data map[string]interface{}, t *Table) {
-	// Chat GPT
-
 	filePath := t.PathDatabase + t.TableName + ".json"
 
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
@@ -184,4 +170,17 @@ func createTheJson(names []string, values []interface{}) string {
 	jsonData.WriteString("}")
 
 	return jsonData.String()
+}
+
+func countWord(names []string, name string) int {
+	var count int
+
+	// Kelimeyi sayıyoruz
+	for _, v := range names {
+		if v == name {
+			count++
+		}
+	}
+
+	return count
 }
