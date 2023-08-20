@@ -80,8 +80,6 @@ func CheckArgs(names []string, values []interface{}, t *Table) {
 
 	CheckNames(names, t)
 	CheckValues(values, t)
-	// Eğer buraya geçerse yukarıdaki fonksiyonlar os.exit çalıştırmamıştır.
-
 }
 
 // Writes to json file.
