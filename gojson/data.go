@@ -18,9 +18,12 @@ func DataInit(names []string, values []interface{}, t *Table) Data {
 	if len(names) != len(t.Properties) {
 		myMap := make(map[string]interface{})
 
-		for _, v := range names {
-			for _, v2 := range values {
-				myMap[v] = v2
+		for i, v := range names {
+			for j, v2 := range values {
+				// Herkes kendi value'sını alsın diye i==j mi diye bakıyoruz.
+				if i == j {
+					myMap[v] = v2
+				}
 			}
 		}
 

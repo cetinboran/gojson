@@ -18,11 +18,13 @@ func (t *Table) AddProperty(name string, valueType string, mode string) {
 }
 
 func (t *Table) Save(data Data) {
+	CheckNames(data.Names, t)
+
 	// Gets all the data form propeties like Mode and needed value type
 	data.GetDataFromProperties(t.Properties)
 	data.CheckMods(t)
 
-	CheckNames(data.Names, t)
+	// Bütün data gelince data.getDataformproperties den bütünü kontrol et.
 	CheckValues(data.Values, data.Types, t)
 
 	newData := GetMapForJson(data.Names, data.Values, t)

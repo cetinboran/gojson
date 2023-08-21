@@ -41,23 +41,25 @@ func CheckNames(names []string, t *Table) {
 func CheckValues(values []interface{}, types []string, t *Table) {
 	check := false
 
+	var typeMustBe string
 	// Bütün propery ler girilmiş gibi düşünülüp kontrol ediliyor.
 	for i, v := range values {
 		typeStr := fmt.Sprint(reflect.TypeOf(v))
 		for j, t := range types {
-			// Burada 0. index value ile 0. index table type ı kayaslanıyor. Yani i = j olmalı diğerlerine bakmanın anlamı yok.
+			// Bütün value kendi type'ına baksın diye i==j kontrolü var
 			if i == j {
 				if t == typeStr {
 					check = true
 					break
 				} else {
 					check = false
+					typeMustBe = t
 				}
 			}
 		}
 		if !check {
 			// gelentype->olmasıgerekentype şeklinde bir hata mesajı veriyoruz.
-			fmt.Println(errorhandler.GetErrorTable(3, typeStr+"->"+t.Properties[i].Type+" in the "+fmt.Sprint(i+1)+" th row."))
+			fmt.Println(errorhandler.GetErrorTable(3, fmt.Sprintf("The type of %v value ", v)+"must be "+typeMustBe))
 			os.Exit(3)
 		}
 	}
