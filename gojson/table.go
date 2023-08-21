@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 )
 
 // Initialize Table
@@ -18,16 +17,17 @@ func (t *Table) AddProperty(name string, valueType string, mode string) {
 	t.Properties = append(t.Properties, Property{Name: name, Type: valueType, Mode: mode})
 }
 
-// Addes data to the table
-func (t *Table) Save(name string, values []interface{}) {
-	name = strings.ReplaceAll(name, " ", "") // Bütün boşluklardan kurtuluyorum
-	nameArr := strings.Split(name, ",")      // , ile split atıyorum.
+func (t *Table) Save(data Data) {
+	// Gets all the data form propeties like Mode and needed value type
+	data.GetDataFromProperties(t.Properties)
+	data.CheckMods(t)
 
-	// Burası hata çıkarırsa programdan exit atıyor. yoksa devam ediyor.
-	CheckArgs(nameArr, values, t)
+	CheckNames(data.Names, t)
+	CheckValues(data.Values, data.Types, t)
 
-	newData := GetMapForJson(nameArr, values, t)
+	newData := GetMapForJson(data.Names, data.Values, t)
 	WriteToJson(newData, t)
+
 }
 
 func (t *Table) Get() []map[string]interface{} {

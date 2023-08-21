@@ -25,9 +25,11 @@
             + Mode PK: It provides automatic id assignment.
     + `Database1.AddTable(&Table1)`: This function adds the table to the database. 
     + `Database1.CreateFiles()`: This creates database files.
-    + `Table1.Save("userId,username,password", []interface{}{-1, "value2", "value3"})`: This one takes 2 arguments according to table1 in properties. One of the values it takes is a string and the other is an interface array.
-        + First argument must contain all property names you create
-        + The second argument contains their values. It should still include all
+    + `gojson.DataInit([]string{"username"}, []interface{}{"Boran"}, &Table1)`: his one takes 3 arguments according to table1 in properties. One of the values it takes is a string and the other is an interface array and the last one is the table that you are going to save.
+        + The first argument will cover the property names to which you will add the value.
+        + The second argument contains their values.
+        + The last argument is the table that you are going to save. Otherwise it wont save.
+    + `Table1.Save(data Data)`: This one takes one argument and it's the gojson data struct.
     + `Table1.Get()`: This function returns all registered data as []map[string]interface{}.
 + Now a setup example for the project.
 
@@ -42,7 +44,7 @@ import (
 
 func main() {
 	// Database1
-	Database1 := gojson.CreateDatabase("Database1", "./")
+	Database := gojson.CreateDatabase("Database", "./")
 
 	// Table1
 	Table1 := gojson.CreateTable("users")
@@ -51,13 +53,16 @@ func main() {
 	Table1.AddProperty("password", "string", "")
 
 	// Adds the table to the database
-	Database1.AddTable(&Table1)
+	Database.AddTable(&Table1)
 
-	Database1.CreateFiles()
+    // Creates the json files.
+	Database.CreateFiles()
 
-	Table1.Save("userId,username,password", []interface{}{-1, "cetinboran", "ThePass"})
-	Table1.Save("userId,username,password", []interface{}{-1, "arzu", "ThePass"})
+    // You don't need to include the whole property name, gojson will do it for you and give the initial values.
+    Table1.Save(gojson.DataInit([]string{"username", "password"}, []interface{}{"Boran","cetin"}, &Table1))
+    Table1.Save(gojson.DataInit([]string{"username", "password"}, []interface{}{"Arzu","1597"}, &Table1))
 	
+    // You can get the values of json files using Table1.Get() it returns map.
 	fmt.Println(Table1.Get())
 }
 

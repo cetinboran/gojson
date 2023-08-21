@@ -20,3 +20,9 @@ type Property struct {
 	Type string
 	Mode string
 }
+type Data struct {
+	Names  []string
+	Values []interface{}
+	Types  []string
+	Mods   []string
+}
