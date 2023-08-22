@@ -102,6 +102,42 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 	}
 }
 
+// Saves Updated Json.
+func SaveUpdatedData(updatedData []map[string]interface{}, t *Table) {
+	filePath := t.PathDatabase + t.TableName + ".json"
+
+	newJSONData, err := json.Marshal(updatedData)
+	if err != nil {
+		fmt.Println("Error encoding JSON:", err)
+		os.Exit(9)
+	}
+
+	err = os.WriteFile(filePath, newJSONData, 0644)
+	if err != nil {
+		fmt.Println("Error writing JSON file:", err)
+		os.Exit(9)
+	}
+}
+
+// Değişebilecek bütün dataların indexini buluyorum ve Update Fonksiyonuna yolluyorum.
+func GetIndex(jsonData []map[string]interface{}, uniqueStr string, uniqueStrValue interface{}) []int {
+	if fmt.Sprint(reflect.TypeOf(uniqueStrValue)) == "int" {
+		uniqueStrValue = float64(uniqueStrValue.(int))
+	}
+
+	var index []int
+
+	for i, v := range jsonData {
+		for k, v2 := range v {
+			if k == uniqueStr && v2 == uniqueStrValue {
+				index = append(index, i)
+			}
+		}
+	}
+
+	return index
+}
+
 func GetMapForJson(names []string, values []interface{}, t *Table) map[string]interface{} {
 	data := make(map[string]interface{})
 
@@ -114,6 +150,16 @@ func GetMapForJson(names []string, values []interface{}, t *Table) map[string]in
 	}
 
 	return data
+}
+
+func FindPkName(t *Table) string {
+	for _, p := range t.Properties {
+		if p.Mode == "PK" {
+			return p.Name
+		}
+	}
+
+	return ""
 }
 
 func countWord(names []string, name string) int {

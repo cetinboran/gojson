@@ -25,12 +25,17 @@
             + Mode PK: It provides automatic id assignment.
     + `Database1.AddTable(&Table1)`: This function adds the table to the database. 
     + `Database1.CreateFiles()`: This creates database files.
-    + `gojson.DataInit([]string{"username"}, []interface{}{"Boran"}, &Table1)`: his one takes 3 arguments according to table1 in properties. One of the values it takes is a string and the other is an interface array and the last one is the table that you are going to save.
+    + `gojson.DataInit([]string{"username"}, []interface{}{"Boran"}, &Table1)`: This one takes 3 arguments according to table1 in properties. One of the values it takes is a string and the other is an interface array and the last one is the table that you are going to save.
         + The first argument will cover the property names to which you will add the value.
         + The second argument contains their values.
         + The last argument is the table that you are going to save. Otherwise it wont save.
     + `Table1.Save(data Data)`: This one takes one argument and it's the gojson data struct.
     + `Table1.Get()`: This function returns all registered data as []map[string]interface{}.
+    + `Table1.Update(uniqueStr string, uniqueStrValue interface{}, data Data)`: This takes 3 argument.
+        + The first argument tells the function which data to change. Preferably unique data should be used like userId
+        + The second argument represents the value of the property name we get in the first argument, like 1, 2, hi
+            + if you write userId in the first and 2 in the second. You change the userId 2 from inside the json.
+        + The last one is the Data struct. While saving, you were entering the property name and values to add to the data struct, here you will enter the property name and values to update.
 + Now a setup example for the project.
 
 ```
@@ -64,6 +69,11 @@ func main() {
 	
     // You can get the values of json files using Table1.Get() it returns map.
 	fmt.Println(Table1.Get())
+
+    // Update Example
+    // I changed the username of the data with a userId to "arzu"
+    newData := gojson.DataInit([]string{"username"}, []interface{}{"arzu"}, &Table1)
+	Table1.Update("userId", 1, newData)
 }
 
 ```
