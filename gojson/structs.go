@@ -4,7 +4,7 @@ package gojson
 type Database struct {
 	DatabaseName string
 	Path         string
-	Tables       []*Table
+	Tables      map[string]*Table
 }
 
 // Table Struct

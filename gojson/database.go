@@ -3,18 +3,28 @@ package gojson
 import (
 	"fmt"
 	"os"
+
+	"github.com/cetinboran/gojson/errorhandler"
 )
 
 // initialize Database
 func CreateDatabase(dbName string, path string) Database {
-	return Database{DatabaseName: dbName, Path: path}
+	return Database{DatabaseName: dbName, Path: path, Tables: make(map[string]*Table)}
 }
 
 // Adds table to the database
 func (d *Database) AddTable(table *Table) {
+
+	for _, t := range d.Tables {
+		if t.TableName == table.TableName {
+			fmt.Println(errorhandler.GetErrorTable(4, t.TableName))
+			os.Exit(4)
+		}
+	}
+
 	// Eğer table'ı sonra değiştiriceksen * kullanmalısın ama şuanlık sıkıntı yok
 	table.PathDatabase = d.Path + d.DatabaseName + "/"
-	d.Tables = append(d.Tables, table)
+	d.Tables[table.TableName] = table
 }
 
 func (d *Database) CreateFiles() {
