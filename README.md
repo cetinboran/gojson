@@ -82,6 +82,11 @@ func main() {
 + we can see the result below.
     + map[password:ThePass userId:1 username:cetinboran] map[password:ThePass userId:2 username:arzu]]
 
+## What's new
++ 23.08.2023
+    + `Table1.Find(PropertyName string, PropertyValue interface{})`: Added find function to table. Now giving the propert name and its value []map[string]interface{}{} 
+    value has a return value. If it returns blank, nothing was found.
+    + Note that if the property type is int and you enter value as a string, nothing will be returned.
 
 # Contact
 

@@ -152,6 +152,8 @@ func GetMapForJson(names []string, values []interface{}, t *Table) map[string]in
 	return data
 }
 
+
+
 func FindPkName(t *Table) string {
 	for _, p := range t.Properties {
 		if p.Mode == "PK" {

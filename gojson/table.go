@@ -33,6 +33,26 @@ func (t *Table) Save(data Data) {
 
 }
 
+func (t *Table) Find(uniqueStr string, uniqueStrValue interface{}) []map[string]interface{} {
+	jsonData := t.Get()
+
+	if fmt.Sprint(reflect.TypeOf(uniqueStrValue)) == "int" {
+		uniqueStrValue = float64(uniqueStrValue.(int))
+	}
+
+	var all []map[string]interface{}
+
+	for i, v := range jsonData {
+		for k, v2 := range v {
+			if k == uniqueStr && v2 == uniqueStrValue {
+				all = append(all, jsonData[i])
+			}
+		}
+	}
+
+	return all
+}
+
 func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) {
 	jsonData := t.Get()
 
