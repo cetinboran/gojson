@@ -87,6 +87,9 @@ func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) 
 						if v2 != "" {
 							jsonData[index][k] = v2
 						}
+					case "bool":
+						jsonData[index][k] = v2
+						break
 					}
 				}
 			}
