@@ -88,8 +88,8 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 	// Jsonu okduğumuz yerden aldığımız dataya eklieyeceğim datayı ekliyoruz
 	existingData = append(existingData, data)
 
-	// JSON dosyasını yeniden yaz
-	newJSONData, err := json.Marshal(existingData)
+	// JSON dosyasını yeniden yaz Buradaki marshallIndet insanların okuyacağı şekilde yazar.
+	newJSONData, err := json.MarshalIndent(existingData, "", "  ")
 	if err != nil {
 		fmt.Println("Error encoding JSON:", err)
 		os.Exit(9)
@@ -151,8 +151,6 @@ func GetMapForJson(names []string, values []interface{}, t *Table) map[string]in
 
 	return data
 }
-
-
 
 func FindPkName(t *Table) string {
 	for _, p := range t.Properties {
