@@ -125,7 +125,18 @@ func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
 		}
 	}
 
-	fmt.Println("Deletion completed")
+	// Burada o table'ın PK nameini buluyorum ve idlerini en baştan atıyorum ki id ye göre işlem yapanlarda sıkıntı çıkmasın.
+	// Çünkü Pk name unique dir.
+	count := 1
+	for i, v := range all {
+		for k := range v {
+			if FindPkName(t) == k {
+				all[i][k] = count
+				break
+			}
+		}
+		count++
+	}
 
 	SaveUpdatedData(all, t)
 }
