@@ -106,7 +106,7 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 func SaveUpdatedData(updatedData []map[string]interface{}, t *Table) {
 	filePath := t.PathDatabase + t.TableName + ".json"
 
-	newJSONData, err := json.Marshal(updatedData)
+	newJSONData, err := json.MarshalIndent(updatedData, "", "  ")
 	if err != nil {
 		fmt.Println("Error encoding JSON:", err)
 		os.Exit(9)
