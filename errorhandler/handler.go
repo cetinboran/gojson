@@ -12,6 +12,8 @@ func GetErrorTable(errorId int, value string) string {
 		return fmt.Sprintf("This property type is not matching: %v", value)
 	case 4:
 		return fmt.Sprintf("This tablename is already using: %v", value)
+	case 5:
+		return fmt.Sprintf("There is no data with %v value. Deletion failed", value)
 	}
 
 	return ""

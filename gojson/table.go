@@ -6,6 +6,8 @@ import (
 	"io"
 	"os"
 	"reflect"
+
+	"github.com/cetinboran/gojson/errorhandler"
 )
 
 // Initialize Table
@@ -79,6 +81,7 @@ func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) 
 					case "int":
 						value := FindPkName(t)
 						// Primary Key ise değiştirlmesin.
+						// Eğer biri PK olan bir değeri değiştirmeye çalışıyorsa diye alttaki if var. PK ise değiştirme yapmaz.
 						if v2 != 0 && value != "PK" {
 							jsonData[index][k] = v2
 						}
@@ -97,6 +100,34 @@ func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) 
 
 		SaveUpdatedData(jsonData, t)
 	}
+}
+
+func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
+	if fmt.Sprint(reflect.TypeOf(uniqueStrValue)) == "int" {
+		uniqueStrValue = float64(uniqueStrValue.(int))
+	}
+
+	if len(t.Find(uniqueStr, uniqueStrValue)) == 0 {
+		fmt.Printf(errorhandler.GetErrorTable(5, fmt.Sprint(uniqueStrValue)))
+		os.Exit(5)
+	}
+
+	jsonData := t.Get()
+
+	var all []map[string]interface{}
+
+	for i, v := range jsonData {
+		for k, v2 := range v {
+			if k == uniqueStr && v2 != uniqueStrValue {
+				all = append(all, jsonData[i])
+				break
+			}
+		}
+	}
+
+	fmt.Println("Deletion completed")
+
+	SaveUpdatedData(all, t)
 }
 
 func (t *Table) Get() []map[string]interface{} {
