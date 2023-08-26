@@ -107,6 +107,7 @@ func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
 		uniqueStrValue = float64(uniqueStrValue.(int))
 	}
 
+	// Bunda sıkıntı yok
 	if len(t.Find(uniqueStr, uniqueStrValue)) == 0 {
 		fmt.Printf(errorhandler.GetErrorTable(5, fmt.Sprint(uniqueStrValue)))
 		os.Exit(5)
@@ -125,18 +126,22 @@ func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
 		}
 	}
 
-	// Burada o table'ın PK nameini buluyorum ve idlerini en baştan atıyorum ki id ye göre işlem yapanlarda sıkıntı çıkmasın.
-	// Çünkü Pk name unique dir.
-	count := 1
-	for i, v := range all {
-		for k := range v {
-			if FindPkName(t) == k {
-				all[i][k] = count
-				break
-			}
-		}
-		count++
-	}
+	// Bu mantıklı ancak içeride bir sürü sorun çıkarabiliyor
+	// birbine bağlı bir sürü database varken sıkıntı çıkıyor çünkü diyelim user sildik id si değişti
+	// config dosyasındaki userıd aynı kaldı ancak userın ıd si değiştiği için bağlantı kayıyor.
+
+	// // Burada o table'ın PK nameini buluyorum ve idlerini en baştan atıyorum ki id ye göre işlem yapanlarda sıkıntı çıkmasın.
+	// // Çünkü Pk name unique dir.
+	// count := 1
+	// for i, v := range all {
+	// 	for k := range v {
+	// 		if FindPkName(t) == k {
+	// 			all[i][k] = count
+	// 			break
+	// 		}
+	// 	}
+	// 	count++
+	// }
 
 	SaveUpdatedData(all, t)
 }

@@ -13,7 +13,7 @@ func GetErrorTable(errorId int, value string) string {
 	case 4:
 		return fmt.Sprintf("This tablename is already using: %v", value)
 	case 5:
-		return fmt.Sprintf("There is no data with %v value. Deletion failed", value)
+		return fmt.Sprintf("There is no data with %v value. Deletion failed\n", value)
 	}
 
 	return ""

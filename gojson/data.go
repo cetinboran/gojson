@@ -2,6 +2,7 @@ package gojson
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/cetinboran/gojson/errorhandler"
@@ -94,7 +95,15 @@ func (d *Data) CheckMods(t *Table) {
 			case "PK":
 				if d.Types[i] == "int" {
 					// Eğer PK doğru kullanılmış ise bunun değeri otomatik atanacaktır.
-					d.Values[i] = len(t.Get()) + 1
+					data := t.Get()
+
+					// Eğer veritabanı boş ise userId yi 1 yap değil ise son elemanın userId sine 1 ekleyerek arttır yaptım
+					// Yine sorunlar çıkabilir ama şimdilik çalışır.
+					if len(t.Get()) == 0 {
+						d.Values[i] = 1
+					} else {
+						d.Values[i] = int(math.Floor(data[len(t.Get())-1][FindPkName(t)].(float64))) + 1
+					}
 				} else {
 					fmt.Println(errorhandler.GetErrorMods(1, d.Names[i]))
 					os.Exit(1)
