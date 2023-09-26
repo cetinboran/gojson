@@ -36,6 +36,11 @@ func (t *Table) Save(data Data) {
 
 }
 
+func (t *Table) Reset() {
+	emptyData := make([]map[string]interface{}, 0)
+	saveUpdatedData(emptyData, t)
+}
+
 func (t *Table) Find(uniqueStr string, uniqueStrValue interface{}) []map[string]interface{} {
 	jsonData := t.Get()
 
