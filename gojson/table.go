@@ -12,7 +12,7 @@ import (
 
 // Initialize Table
 func CreateTable(tableName string) Table {
-	return Table{TableName: tableName}
+	return Table{Name: tableName}
 }
 
 // Adds Property to the table
@@ -21,17 +21,17 @@ func (t *Table) AddProperty(name string, valueType string, mode string) {
 }
 
 func (t *Table) Save(data Data) {
-	CheckNames(data.Names, t)
+	checkNames(data.Names, t)
 
 	// Gets all the data form propeties like Mode and needed value type
-	data.GetDataFromProperties(t.Properties)
-	data.CheckMods(t)
+	data.getDataFromProperties(t.Properties)
+	data.checkMods(t)
 
 	// Bütün data gelince data.getDataformproperties den bütünü kontrol et.
-	CheckValues(data.Values, data.Types, t)
+	checkValues(data.Values, data.Types, t)
 
-	newData := GetMapForJson(data.Names, data.Values, t)
-	WriteToJson(newData, t)
+	newData := getMapForJson(data.Names, data.Values, t)
+	writeToJson(newData, t)
 
 }
 
@@ -55,10 +55,11 @@ func (t *Table) Find(uniqueStr string, uniqueStrValue interface{}) []map[string]
 	return all
 }
 
+// Updates Spesific Data
 func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) {
 	jsonData := t.Get()
 
-	indexArr := GetIndex(jsonData, uniqueStr, uniqueStrValue)
+	indexArr := getIndex(jsonData, uniqueStr, uniqueStrValue)
 
 	// All bütün property lere sahip olucak çünkü data tipinde. O yüzden default value ise değiştirmeyeceğiz. Değilse değişilecek
 	all := make(map[string]interface{})
@@ -79,7 +80,7 @@ func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) 
 				if k == k2 {
 					switch fmt.Sprint(reflect.TypeOf(v2)) {
 					case "int":
-						value := FindPkName(t)
+						value := findPkName(t)
 						// Primary Key ise değiştirlmesin.
 						// Eğer biri PK olan bir değeri değiştirmeye çalışıyorsa diye alttaki if var. PK ise değiştirme yapmaz.
 						if v2 != 0 && value != "PK" {
@@ -93,15 +94,22 @@ func (t *Table) Update(uniqueStr string, uniqueStrValue interface{}, data Data) 
 					case "bool":
 						jsonData[index][k] = v2
 						break
+					case "[]string":
+						jsonData[index][k] = v2
+						break
+					case "[]int":
+						jsonData[index][k] = v2
+						break
 					}
 				}
 			}
 		}
 
-		SaveUpdatedData(jsonData, t)
+		saveUpdatedData(jsonData, t)
 	}
 }
 
+// Deletes spesific data
 func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
 	if fmt.Sprint(reflect.TypeOf(uniqueStrValue)) == "int" {
 		uniqueStrValue = float64(uniqueStrValue.(int))
@@ -126,28 +134,12 @@ func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
 		}
 	}
 
-	// Bu mantıklı ancak içeride bir sürü sorun çıkarabiliyor
-	// birbine bağlı bir sürü database varken sıkıntı çıkıyor çünkü diyelim user sildik id si değişti
-	// config dosyasındaki userıd aynı kaldı ancak userın ıd si değiştiği için bağlantı kayıyor.
-
-	// // Burada o table'ın PK nameini buluyorum ve idlerini en baştan atıyorum ki id ye göre işlem yapanlarda sıkıntı çıkmasın.
-	// // Çünkü Pk name unique dir.
-	// count := 1
-	// for i, v := range all {
-	// 	for k := range v {
-	// 		if FindPkName(t) == k {
-	// 			all[i][k] = count
-	// 			break
-	// 		}
-	// 	}
-	// 	count++
-	// }
-
-	SaveUpdatedData(all, t)
+	saveUpdatedData(all, t)
 }
 
+// Returns existing Data
 func (t *Table) Get() []map[string]interface{} {
-	filePath := t.PathDatabase + t.TableName + ".json"
+	filePath := t.PathDatabase + t.Name + ".json"
 
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
 

@@ -3,13 +3,13 @@ package gojson
 // Database struct
 type Database struct {
 	DatabaseName string
-	Path         string
-	Tables      map[string]*Table
+	path         string
+	tables       map[string]*Table
 }
 
 // Table Struct
 type Table struct {
-	TableName    string
+	Name    string
 	Properties   []Property
 	PathDatabase string
 }
@@ -20,6 +20,7 @@ type Property struct {
 	Type string
 	Mode string
 }
+
 type Data struct {
 	Names  []string
 	Values []interface{}

@@ -1,17 +1,15 @@
 package gojson
 
 import (
-	"fmt"
+	"log"
 	"math"
-	"os"
 
 	"github.com/cetinboran/gojson/errorhandler"
 )
 
 func DataInit(names []string, values []interface{}, t *Table) Data {
 	if len(names) != len(values) {
-		fmt.Println(errorhandler.GetErrorMods(2, "Property Names & Values"))
-		os.Exit(2)
+		log.Fatal(errorhandler.GetErrorMods(2, "Property Names & Values"))
 	}
 
 	// Şuanlık çalışıyor İlere Sıkıntı çıkarsa bakarsın.
@@ -64,14 +62,13 @@ func DataInit(names []string, values []interface{}, t *Table) Data {
 		}
 
 		return Data{Names: newNames, Values: newValues, Types: make([]string, len(t.Properties)), Mods: make([]string, len(t.Properties))}
-
 	}
 
 	// Girilen proporties sayısı kadar boyutta types ve mods oluşturdum.
 	return Data{Names: names, Values: values, Types: make([]string, len(t.Properties)), Mods: make([]string, len(t.Properties))}
 }
 
-func (d *Data) GetDataFromProperties(properties []Property) {
+func (d *Data) getDataFromProperties(properties []Property) {
 
 	// Property deki mode ve type bilgilerini buraya atıyorum.
 	for _, p := range properties {
@@ -85,7 +82,7 @@ func (d *Data) GetDataFromProperties(properties []Property) {
 	}
 }
 
-func (d *Data) CheckMods(t *Table) {
+func (d *Data) checkMods(t *Table) {
 	// Find which index of data has mod
 	for i, v := range d.Mods {
 		if v != "" {
@@ -102,11 +99,10 @@ func (d *Data) CheckMods(t *Table) {
 					if len(t.Get()) == 0 {
 						d.Values[i] = 1
 					} else {
-						d.Values[i] = int(math.Floor(data[len(t.Get())-1][FindPkName(t)].(float64))) + 1
+						d.Values[i] = int(math.Floor(data[len(t.Get())-1][findPkName(t)].(float64))) + 1
 					}
 				} else {
-					fmt.Println(errorhandler.GetErrorMods(1, d.Names[i]))
-					os.Exit(1)
+					log.Fatal(errorhandler.GetErrorMods(1, d.Names[i]))
 				}
 				break
 			}

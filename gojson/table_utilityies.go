@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"reflect"
 
@@ -11,14 +12,13 @@ import (
 )
 
 // Here we compare property names with incoming names if they are not the same we send an error. At the same time, we send an error if the same property name is written more than once.
-func CheckNames(names []string, t *Table) {
+func checkNames(names []string, t *Table) {
 	check := false
 
 	for _, v := range names {
 		// Buradaki count karakterleri saydığı için a yazınca propertiy olarak sıkıntı çıkıyor.
 		if countWord(names, v) != 1 {
-			fmt.Println(errorhandler.GetErrorTable(2, v))
-			os.Exit(2)
+			log.Fatal(errorhandler.GetErrorTable(2, v))
 		}
 		for _, p := range t.Properties {
 			if v == p.Name {
@@ -30,15 +30,14 @@ func CheckNames(names []string, t *Table) {
 			}
 		}
 		if !check {
-			fmt.Println(errorhandler.GetErrorTable(1, v))
-			os.Exit(1)
+			log.Fatal(errorhandler.GetErrorTable(1, v))
 		}
 	}
 
 	// Buraya kadar geldiyse exit e gelmemiştir o zaman sorun yok.
 }
 
-func CheckValues(values []interface{}, types []string, t *Table) {
+func checkValues(values []interface{}, types []string, t *Table) {
 	check := false
 
 	var typeMustBe string
@@ -59,20 +58,18 @@ func CheckValues(values []interface{}, types []string, t *Table) {
 		}
 		if !check {
 			// gelentype->olmasıgerekentype şeklinde bir hata mesajı veriyoruz.
-			fmt.Println(errorhandler.GetErrorTable(3, fmt.Sprintf("The type of %v value ", v)+"must be "+typeMustBe))
-			os.Exit(3)
+			log.Fatal(errorhandler.GetErrorTable(3, fmt.Sprintf("The type of %v value ", v)+"must be "+typeMustBe))
 		}
 	}
 }
 
 // Writes to json file.
-func WriteToJson(data map[string]interface{}, t *Table) {
-	filePath := t.PathDatabase + t.TableName + ".json"
+func writeToJson(data map[string]interface{}, t *Table) {
+	filePath := t.PathDatabase + t.Name + ".json"
 
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
-		fmt.Println("Error opening JSON file:", err)
-		os.Exit(9)
+		log.Fatal("Error opening JSON file:", err)
 	}
 	defer file.Close()
 
@@ -81,8 +78,7 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 	var existingData []map[string]interface{}
 	err = json.Unmarshal(byteValue, &existingData)
 	if err != nil {
-		fmt.Println("Error decoding JSON:", err)
-		os.Exit(9)
+		log.Fatal("Error decoding JSON:", err)
 	}
 
 	// Jsonu okduğumuz yerden aldığımız dataya eklieyeceğim datayı ekliyoruz
@@ -91,36 +87,32 @@ func WriteToJson(data map[string]interface{}, t *Table) {
 	// JSON dosyasını yeniden yaz Buradaki marshallIndet insanların okuyacağı şekilde yazar.
 	newJSONData, err := json.MarshalIndent(existingData, "", "  ")
 	if err != nil {
-		fmt.Println("Error encoding JSON:", err)
-		os.Exit(9)
+		log.Fatal("Error encoding JSON:", err)
 	}
 
 	err = os.WriteFile(filePath, newJSONData, 0644)
 	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		os.Exit(9)
+		log.Fatal("Error writing JSON file:", err)
 	}
 }
 
 // Saves Updated Json.
-func SaveUpdatedData(updatedData []map[string]interface{}, t *Table) {
-	filePath := t.PathDatabase + t.TableName + ".json"
+func saveUpdatedData(updatedData []map[string]interface{}, t *Table) {
+	filePath := t.PathDatabase + t.Name + ".json"
 
 	newJSONData, err := json.MarshalIndent(updatedData, "", "  ")
 	if err != nil {
-		fmt.Println("Error encoding JSON:", err)
-		os.Exit(9)
+		log.Fatal("Error encoding JSON:", err)
 	}
 
 	err = os.WriteFile(filePath, newJSONData, 0644)
 	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		os.Exit(9)
+		log.Fatal("Error writing JSON file:", err)
 	}
 }
 
 // Değişebilecek bütün dataların indexini buluyorum ve Update Fonksiyonuna yolluyorum.
-func GetIndex(jsonData []map[string]interface{}, uniqueStr string, uniqueStrValue interface{}) []int {
+func getIndex(jsonData []map[string]interface{}, uniqueStr string, uniqueStrValue interface{}) []int {
 	if fmt.Sprint(reflect.TypeOf(uniqueStrValue)) == "int" {
 		uniqueStrValue = float64(uniqueStrValue.(int))
 	}
@@ -138,7 +130,7 @@ func GetIndex(jsonData []map[string]interface{}, uniqueStr string, uniqueStrValu
 	return index
 }
 
-func GetMapForJson(names []string, values []interface{}, t *Table) map[string]interface{} {
+func getMapForJson(names []string, values []interface{}, t *Table) map[string]interface{} {
 	data := make(map[string]interface{})
 
 	for i, v := range names {
@@ -152,7 +144,7 @@ func GetMapForJson(names []string, values []interface{}, t *Table) map[string]in
 	return data
 }
 
-func FindPkName(t *Table) string {
+func findPkName(t *Table) string {
 	for _, p := range t.Properties {
 		if p.Mode == "PK" {
 			return p.Name
