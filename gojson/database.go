@@ -9,13 +9,13 @@ import (
 
 // initialize Database
 func CreateDatabase(dbName string, path string) Database {
-	return Database{DatabaseName: dbName, path: path, tables: make(map[string]*Table)}
+	return Database{DatabaseName: dbName, path: path, Tables: make(map[string]*Table)}
 }
 
 // Adds table to the database
 func (d *Database) AddTable(table *Table) {
 
-	for _, t := range d.tables {
+	for _, t := range d.Tables {
 		if t.Name == table.Name {
 			log.Fatal(errorhandler.GetErrorTable(4, t.Name))
 		}
@@ -23,7 +23,7 @@ func (d *Database) AddTable(table *Table) {
 
 	// Eğer table'ı sonra değiştiriceksen * kullanmalısın ama şuanlık sıkıntı yok
 	table.PathDatabase = d.path + d.DatabaseName + "/"
-	d.tables[table.Name] = table
+	d.Tables[table.Name] = table
 }
 
 func (d *Database) CreateFiles() {
@@ -37,7 +37,7 @@ func (d *Database) CreateFiles() {
 		}
 
 		// Direkt Table'ları oluşturuyoruz.
-		for _, t := range d.tables {
+		for _, t := range d.Tables {
 			TablePath := DatabasePath + "/" + t.Name + ".json"
 			// Database klasörünün içine table dosyası oluşturulucak
 			file, err := os.Create(TablePath)
@@ -54,7 +54,7 @@ func (d *Database) CreateFiles() {
 	} else {
 		// Eğer Db klasörü var ise içindeki tablelar tam olarak var mı bakıyoruz.
 		// Tam değil ise eksikleri oluşturuyoruz
-		for _, t := range d.tables {
+		for _, t := range d.Tables {
 			TablePath := DatabasePath + "/" + t.Name + ".json"
 			if !HasFile(TablePath) {
 				// Database klasörünün içine table dosyası oluşturulucak
