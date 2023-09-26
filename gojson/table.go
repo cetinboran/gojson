@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"reflect"
 
@@ -117,8 +118,7 @@ func (t *Table) Delete(uniqueStr string, uniqueStrValue interface{}) {
 
 	// Bunda sıkıntı yok
 	if len(t.Find(uniqueStr, uniqueStrValue)) == 0 {
-		fmt.Printf(errorhandler.GetErrorTable(5, fmt.Sprint(uniqueStrValue)))
-		os.Exit(5)
+		log.Fatal(errorhandler.GetErrorTable(5, fmt.Sprint(uniqueStrValue)))
 	}
 
 	jsonData := t.Get()

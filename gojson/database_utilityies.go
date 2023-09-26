@@ -1,7 +1,7 @@
 package gojson
 
 import (
-	"fmt"
+	"log"
 	"os"
 )
 
@@ -13,7 +13,7 @@ func HasFile(filePath string) bool {
 	} else if os.IsNotExist(err) {
 		return false
 	} else {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
 	return false

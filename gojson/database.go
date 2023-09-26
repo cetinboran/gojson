@@ -1,7 +1,7 @@
 package gojson
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/cetinboran/gojson/errorhandler"
@@ -17,8 +17,7 @@ func (d *Database) AddTable(table *Table) {
 
 	for _, t := range d.tables {
 		if t.Name == table.Name {
-			fmt.Println(errorhandler.GetErrorTable(4, t.Name))
-			os.Exit(4)
+			log.Fatal(errorhandler.GetErrorTable(4, t.Name))
 		}
 	}
 
@@ -34,7 +33,7 @@ func (d *Database) CreateFiles() {
 	DatabasePath := d.path + d.DatabaseName
 	if !HasFile(DatabasePath) {
 		if err := os.Mkdir(d.path+d.DatabaseName, 777); err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 
 		// Direkt Table'ları oluşturuyoruz.
@@ -43,13 +42,13 @@ func (d *Database) CreateFiles() {
 			// Database klasörünün içine table dosyası oluşturulucak
 			file, err := os.Create(TablePath)
 			if err != nil {
-				fmt.Println(err)
+				log.Fatal(err)
 			}
 			defer file.Close()
 
 			err = os.WriteFile(TablePath, []byte("[]"), 0644)
 			if err != nil {
-				fmt.Println(err)
+				log.Fatal(err)
 			}
 		}
 	} else {
@@ -61,13 +60,13 @@ func (d *Database) CreateFiles() {
 				// Database klasörünün içine table dosyası oluşturulucak
 				file, err := os.Create(TablePath)
 				if err != nil {
-					fmt.Println(err)
+					log.Fatal(err)
 				}
 				defer file.Close()
 
 				err = os.WriteFile(TablePath, []byte("[]"), 0644)
 				if err != nil {
-					fmt.Println(err)
+					log.Fatal(err)
 				}
 			}
 		}
